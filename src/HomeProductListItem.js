@@ -1,11 +1,14 @@
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 
-const HomeProductListItem = () => (
+const HomeProductListItem = (props) => (
   <Card>
-    <Card.Img variant="top" src="https://via.placeholder.com/150"/>
+    <Card.Img variant="top" src={props.thumbnailUrl}/>
     <Card.Body>
-      <Card.Title>Item name</Card.Title>
+      <Card.Title>{props.name}</Card.Title>
+      <Card.Text>
+        ￥{props.price}
+      </Card.Text>
       <Button variant="primary">Go item</Button>
     </Card.Body>
   </Card>

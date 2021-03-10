@@ -27,6 +27,16 @@ class Firebase {
       })
     })
   }
+
+  fetchAllProductDocuments = () => {
+    return this.db.collection("products").get().then((querySnapshot) => {
+      let result = []
+      querySnapshot.forEach((doc) => {
+        result.push(doc.data())
+      })
+      return result
+    })
+  }
 }
 
 export default Firebase

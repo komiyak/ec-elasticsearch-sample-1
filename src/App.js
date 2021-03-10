@@ -11,12 +11,42 @@ import HomeProductListItem from "./HomeProductListItem";
 import Firebase from "./Firebase";
 
 class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      isLoaded: false,
+      items: []
+    }
+  }
+
   componentDidMount() {
     const firebase = new Firebase();
-    firebase.printInformationOfAllSampleItems()
+
+    const results = firebase.fetchAllProductDocuments()
+    results.then((results) => {
+      this.setState({
+        isLoaded: true,
+        items: results
+      })
+    })
   }
 
   render() {
+    let productsDom = <Col>
+      <p>Loading...</p>
+    </Col>
+
+    const itemsDom = []
+    const { isLoaded, items } = this.state
+    if (isLoaded) {
+      for (let i = 0; i < items.length; i++) {
+        itemsDom.push(<Col key={i} xs={4}>
+          <HomeProductListItem name={items[i].name} thumbnailUrl={items[i].thumbnailUrl} price={items[i].price}/>
+        </Col>)
+      }
+      productsDom = itemsDom
+    }
+
     return (
       <Container>
         <Row>
@@ -29,18 +59,7 @@ class App extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={4}>
-            <HomeProductListItem/>
-          </Col>
-          <Col xs={4}>
-            <HomeProductListItem/>
-          </Col>
-          <Col xs={4}>
-            <HomeProductListItem/>
-          </Col>
-          <Col xs={4}>
-            <HomeProductListItem/>
-          </Col>
+          {productsDom}
         </Row>
         <Row>
           <Col style={{ marginTop: "32px" }}>

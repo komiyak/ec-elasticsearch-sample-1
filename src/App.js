@@ -15,8 +15,12 @@ class App extends React.Component {
     super(props)
     this.state = {
       isLoaded: false,
-      items: []
+      items: [],
+      searchFormValue: '' // 検索フォームの内容
     }
+
+    this.handleSearchChange = this.handleSearchChange.bind(this)
+    this.handleSearchSubmit = this.handleSearchSubmit.bind(this)
   }
 
   componentDidMount() {
@@ -25,10 +29,38 @@ class App extends React.Component {
     const results = firebase.fetchAllProductDocuments()
     results.then((results) => {
       this.setState({
+        ...this.state,
         isLoaded: true,
         items: results
       })
     })
+  }
+
+  handleSearchChange(event) {
+    this.setState({ searchFormValue: event.target.value })
+  }
+
+  handleSearchSubmit(event) {
+    if (this.state.searchFormValue) {
+      const url = new URL('https://ec-elasticsearch-1-api.an.r.appspot.com/search') // TODO: localhost からも利用できるようにしたい
+      url.search = new URLSearchParams({ q: this.state.searchFormValue }).toString()
+
+      this.setState({
+        ...this.state,
+        isLoaded: false
+      })
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          this.setState({
+            ...this.state,
+            isLoaded: true,
+            items: (data.data && data.data.length > 0) ? (data.data) : [] // 検索結果があるときだけ利用する
+          })
+        })
+    }
+    event.preventDefault()
   }
 
   render() {
@@ -51,9 +83,9 @@ class App extends React.Component {
       <Container>
         <Row>
           <Col>
-            <Form>
+            <Form onSubmit={this.handleSearchSubmit}>
               <Form.Group>
-                <Form.Control type="text" placeholder="Search"/>
+                <Form.Control type="text" placeholder="Search" onChange={this.handleSearchChange}/>
               </Form.Group>
             </Form>
           </Col>

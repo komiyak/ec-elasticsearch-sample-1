@@ -42,7 +42,7 @@ class App extends React.Component {
 
   handleSearchSubmit(event) {
     if (this.state.searchFormValue) {
-      const url = new URL('https://ec-elasticsearch-1-api.an.r.appspot.com/search')
+      const url = new URL('https://ec-elasticsearch-1-api.an.r.appspot.com/search') // TODO: localhost からも利用できるようにしたい
       url.search = new URLSearchParams({ q: this.state.searchFormValue }).toString()
 
       this.setState({

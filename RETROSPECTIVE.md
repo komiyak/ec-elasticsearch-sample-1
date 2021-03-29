@@ -43,13 +43,17 @@ https://github.com/google-github-actions/deploy-appengine#authorization
 ローカル環境で開発する場合は、Elasticsearch をローカルで動かす。
 ステージング環境は、無料の Sandbox 環境が利用できる bonsai.io を使う。
 
-bonsai.io は Elasticaserch の Index Auto-creation が無効化されているため、
-マニュアルで Index を作成しなければならない。
-Index の作成手順:  
-https://docs.bonsai.io/article/96-creating-your-first-index
+bonsai.io は Elasticaserch の Index Auto-creation が無効にされているため、
+Index の新規作成はマニュアルで実行しなければならない。
+Index の作成手順は [こちら](https://docs.bonsai.io/article/96-creating-your-first-index) 。
 
-bonsai.io で作成した Cluster から Credential を取得し、
-GitHub Secrets に設定し、app.yaml の環境変数に反映されるようにする。
+```shell
+# 実行例
+curl -X PUT https://user_name:password@your-application.us-east-1.bonsaisearch.net:443/your_new_index_name
+```
+
+bonsai.io で作成した Cluster への接続するには、bonsai.io のサイトから Credential を取得する。
+そしてそれを GitHub Secrets に設定し、app.yaml の環境変数に反映されるようにする。
 
 
 
